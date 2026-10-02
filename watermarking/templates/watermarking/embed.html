@@ -1,0 +1,38 @@
+{% extends "watermarking/base.html" %}
+
+{% block title %}Embed Watermark{% endblock %}
+{% block nav_embed %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>1. Embed a watermark into a cover image</h2>
+  <p class="helptext">
+    Upload a cover image and a watermark image. You'll get back a watermarked
+    PNG that looks (almost) identical to the cover image to the naked eye.
+  </p>
+
+  {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Embed watermark</button>
+  </form>
+</div>
+
+{% if result_url %}
+<div class="result">
+  <h2>Result</h2>
+  <img src="{{ result_url }}" alt="Watermarked image">
+  <p><a class="download-btn" href="{{ result_url }}" download>Download watermarked_image.png</a></p>
+  <div class="note">
+    <strong>Keep your original cover image.</strong> This scheme recovers the
+    watermark by comparing the watermarked image back against the original
+    cover image, so you'll need both — plus the same alpha and sub-band — on
+    the <a href="{% url 'watermarking:extract' %}">Extract</a> page later.
+    Also keep the watermarked file as PNG; re-saving it as JPEG will destroy
+    the hidden watermark.
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "watermarking/base.html" %}
+
+{% block title %}Extract Watermark{% endblock %}
+{% block nav_extract %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>2. Extract a watermark back out</h2>
+  <p class="helptext">
+    Upload the watermarked image together with the original cover image used
+    to make it, plus the same alpha and sub-band you embedded with.
+  </p>
+
+  {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Extract watermark</button>
+  </form>
+</div>
+
+{% if result_url %}
+<div class="result">
+  <h2>Recovered watermark</h2>
+  <img src="{{ result_url }}" alt="Recovered watermark">
+  <p><a class="download-btn" href="{{ result_url }}" download>Download recovered_watermark.png</a></p>
+  <div class="note">
+    The recovered watermark is grayscale and roughly half the width/height of
+    the cover image (a single-level DWT halves each dimension). If it looks
+    like pure noise, double-check that the alpha and sub-band match exactly
+    what was used to embed it, and that the watermarked file is still the
+    original PNG (not re-compressed or resized).
+  </div>
+</div>
+{% endif %}
+{% endblock %}
